@@ -40,31 +40,61 @@
 //
 // Related Topics 递归 链表 数学 👍 10381 👎 0
 
-
 //leetcode submit region begin(Prohibit modification and deletion)
 // Definition for singly-linked list.
 // #[derive(PartialEq, Eq, Clone, Debug)]
 // pub struct ListNode {
-//   pub val: i32,
-//   pub next: Option<Box<ListNode>>
+//     pub val: i32,
+//     pub next: Option<Box<ListNode>>,
 // }
 //
 // impl ListNode {
-//   #[inline]
-//   fn new(val: i32) -> Self {
-//     ListNode {
-//       next: None,
-//       val
+//     #[inline]
+//     fn new(val: i32) -> Self {
+//         ListNode {
+//             next: None,
+//             val,
+//         }
 //     }
-//   }
 // }
+
 impl Solution {
     pub fn add_two_numbers(l1: Option<Box<ListNode>>, l2: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
-
+        return Solution::add_two_numbers_iter(l1, l2, 0);
     }
 
     pub fn add_two_numbers_iter(l1: Option<Box<ListNode>>, l2: Option<Box<ListNode>>, x: i32) -> Option<Box<ListNode>> {
-        let
+        if l1 == None && l2 == None {
+            if x == 0 {
+                return None;
+            }
+            return Some(Box::new(ListNode::new(x)));
+        }
+
+        let (l1_val, l1_next) = l1.map_or((0, None), |v| {
+            ((*v).val, (*v).next)
+        });
+        let (l2_val, l2_next) = l2.map_or((0, None), |v| {
+            ((*v).val, (*v).next)
+        });
+
+        let y = l1_val + l2_val + x;
+
+        let a;
+        let mut current_node;
+        if y < 10 {
+            a = 0;
+            current_node = Box::new(ListNode::new(y));
+        } else {
+            a = 1;
+            current_node = Box::new(ListNode::new(y - 10));
+        }
+
+        let iter = Solution::add_two_numbers_iter(l1_next, l2_next, a);
+
+        (*current_node).next = iter;
+
+        return Some(current_node);
     }
 }
 //leetcode submit region end(Prohibit modification and deletion)
